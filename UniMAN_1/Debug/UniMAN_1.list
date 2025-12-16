@@ -27,25 +27,25 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
  11 .ARM.attributes 00000030  00000000  00000000  00006010  2**0
                   CONTENTS, READONLY
- 12 .debug_info   0000f1be  00000000  00000000  00006040  2**0
+ 12 .debug_info   0000f252  00000000  00000000  00006040  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 13 .debug_abbrev 00001d8f  00000000  00000000  000151fe  2**0
+ 13 .debug_abbrev 00001da0  00000000  00000000  00015292  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 14 .debug_aranges 00000e38  00000000  00000000  00016f90  2**3
+ 14 .debug_aranges 00000e40  00000000  00000000  00017038  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_rnglists 00000b2d  00000000  00000000  00017dc8  2**0
+ 15 .debug_rnglists 00000b52  00000000  00000000  00017e78  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_macro  0002202a  00000000  00000000  000188f5  2**0
+ 16 .debug_macro  0002202a  00000000  00000000  000189ca  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_line   0000f3fc  00000000  00000000  0003a91f  2**0
+ 17 .debug_line   0000f528  00000000  00000000  0003a9f4  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_str    000d5bb9  00000000  00000000  00049d1b  2**0
+ 18 .debug_str    000d5bdf  00000000  00000000  00049f1c  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .comment      00000043  00000000  00000000  0011f8d4  2**0
+ 19 .comment      00000043  00000000  00000000  0011fafb  2**0
                   CONTENTS, READONLY
- 20 .debug_frame  00003c50  00000000  00000000  0011f918  2**2
+ 20 .debug_frame  00003c74  00000000  00000000  0011fb40  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 21 .debug_line_str 00000068  00000000  00000000  00123568  2**0
+ 21 .debug_line_str 00000068  00000000  00000000  001237b4  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -466,6 +466,10 @@ void set_servo_SG90_angle(uint32_t channel, uint8_t angle){
  80005ac:	20000000 	.word	0x20000000
 
 080005b0 <HAL_GPIO_EXTI_Callback>:
+	  }
+  }
+  if(!emergency_stop) current_angle=angle;
+}
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
  80005b0:	b580      	push	{r7, lr}

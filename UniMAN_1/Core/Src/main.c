@@ -68,6 +68,38 @@ void set_servo_SG90_angle(uint32_t channel, uint8_t angle){
   current_angle=angle;
 }
 
+void set_servo_SG90_angle_smooth(uint32_t channel, uint8_t angle){
+  uint16_t pulse_min=875;  // 1 ms = 1000
+  uint16_t pulse_max=2525;  // 2 ms = 2000
+
+  if(emergency_stop) return;
+
+  uint16_t pulse_now=__HAL_TIM_GET_COMPARE(&htim2, TIM_CHANNEL_1);
+  if (!pulse_now) pulse_now=(current_angle/180)*(pulse_max-pulse_min)+pulse_min;
+  uint16_t pulse=pulse_min+((pulse_max-pulse_min)*angle)/180;
+
+  //uint8_t ang_now=pulse_now/(pulse_max-pulse_min)*180;
+
+  if(pulse>pulse_now){
+	  for(int i=pulse_now; i<=pulse; i++){
+		  if(emergency_stop) return;
+		  __HAL_TIM_SET_COMPARE(&htim2, channel, i);
+		  current_angle=(uint8_t)(((i-pulse_min)*180)/(pulse_max-pulse_min));
+		  HAL_Delay(0.25);
+	  }
+  }
+  else{
+	  for(int i=pulse_now; i>=pulse; i--){
+		  if(emergency_stop) return;
+		  __HAL_TIM_SET_COMPARE(&htim2, channel, i);
+		  //current_angle=(i-pulse_min)/(pulse_max-pulse_min)*180;
+		  current_angle=(uint8_t)(((i-pulse_min)*180)/(pulse_max-pulse_min));
+		  HAL_Delay(0.25);
+	  }
+  }
+  if(!emergency_stop) current_angle=angle;
+}
+
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
     if(GPIO_Pin==GPIO_PIN_13){
         uint32_t now=HAL_GetTick();
