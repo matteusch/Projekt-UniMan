@@ -1,7 +1,7 @@
-12:13:38 **** Incremental Build of configuration Debug for project UniMAN_1 ****
+12:16:43 **** Incremental Build of configuration Debug for project UniMAN_1 ****
 make -j4 all 
 arm-none-eabi-size  UniMAN_1.elf 
    text	   data	    bss	    dec	    hex	filename
-  16740	     24	   1784	  18548	   4874	UniMAN_1.elf
+  16832	     24	   1792	  18648	   48d8	UniMAN_1.elf
 Finished building: default.size.stdout
  

@@ -67,6 +67,29 @@ void set_servo_SG90_angle(uint32_t channel, uint8_t angle){
   __HAL_TIM_SET_COMPARE(&htim2, channel, pulse);
   current_angle=angle;
 }
+
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
+    if(GPIO_Pin==GPIO_PIN_13){
+        uint32_t now=HAL_GetTick();
+
+        // Debounce ~200 ms
+        if(now-last_button_time<200) return;
+        last_button_time=now;
+
+        // TOGGLE
+        emergency_stop ^= 1;
+
+        if(emergency_stop){
+            // STOP – natychmiast wyłącz PWM
+            __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1, 0);
+        }
+        else{
+            // RUN – wróć do ostatniej pozycji
+        	set_servo_SG90_angle(TIM_CHANNEL_1, current_angle);
+        }
+    }
+}
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
