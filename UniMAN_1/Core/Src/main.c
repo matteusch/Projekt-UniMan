@@ -58,7 +58,15 @@ static void MX_GPIO_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_TIM2_Init(void);
 /* USER CODE BEGIN PFP */
+void set_servo_SG90_angle(uint32_t channel, uint8_t angle){
+  uint16_t pulse_min=875;  // 1 ms = 1000
+  uint16_t pulse_max=2525;  // 2 ms = 2000
 
+  uint16_t pulse=pulse_min+((pulse_max-pulse_min)*angle)/180;
+
+  __HAL_TIM_SET_COMPARE(&htim2, channel, pulse);
+  current_angle=angle;
+}
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -101,13 +109,31 @@ int main(void)
   HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2);
   HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_3);
 
-
+  HAL_GPIO_WritePin(LD4_GPIO_Port, LD4_Pin, GPIO_PIN_SET);
+  set_servo_SG90_angle(TIM_CHANNEL_1, 90);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  if(!emergency_stop){
+	  		  HAL_GPIO_TogglePin(LD4_GPIO_Port, LD4_Pin);
+	  		  set_servo_SG90_angle(TIM_CHANNEL_1, 0);
+	  		  HAL_Delay(1000);
+
+	  		  HAL_GPIO_TogglePin(LD4_GPIO_Port, LD4_Pin);
+	  		  set_servo_SG90_angle(TIM_CHANNEL_1, 90);
+	  		  HAL_Delay(1000);
+
+	  		  HAL_GPIO_TogglePin(LD4_GPIO_Port, LD4_Pin);
+	  		  set_servo_SG90_angle(TIM_CHANNEL_1, 180);
+	  		  HAL_Delay(1000);
+
+	  		  HAL_GPIO_TogglePin(LD4_GPIO_Port, LD4_Pin);
+	  		  set_servo_SG90_angle(TIM_CHANNEL_1, 90);
+	  		  HAL_Delay(1000);
+	  	  }
 
     /* USER CODE END WHILE */
 
